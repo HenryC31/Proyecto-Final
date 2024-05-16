@@ -8,13 +8,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -146,10 +149,9 @@ public class Proyecto {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 //				quitar_paneles();
-				controlEsc.getContentPane().removeAll();
-				iniciado = true;
+//				controlEsc.getContentPane().removeAll();
+//				iniciado = true;
 				menu();
-
 			}
 		});
 		login_formulario_panel.add(login_btn);
@@ -163,6 +165,21 @@ public class Proyecto {
 		controlEsc.repaint();
 		controlEsc.revalidate();
 
+	}
+
+	public void buscador() {
+		JFileChooser busc = new JFileChooser();
+		int opcion = busc.showOpenDialog(controlEsc);
+		File archivo = busc.getSelectedFile();
+		try {
+			String origen = archivo.getPath();
+			ImageIcon icono = new ImageIcon(origen);
+			controlEsc.setIconImage(icono.getImage());
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(null, "Selecciona un archivo válido", "Error en tipo de archivo",
+					JOptionPane.WARNING_MESSAGE);
+			e2.printStackTrace();
+		}
 	}
 
 	public void menu() {
