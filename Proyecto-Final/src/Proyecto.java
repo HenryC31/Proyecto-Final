@@ -30,9 +30,9 @@ public class Proyecto {
 
 	boolean iniciado = false;
 
-	public static void main(String[] args) {
-		Proyecto proyecto = new Proyecto();
-	}
+//	public static void main(String[] args) {
+//		Proyecto proyecto = new Proyecto();
+//	}
 
 	public Proyecto() {
 		iniciar();
@@ -149,7 +149,7 @@ public class Proyecto {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 //				quitar_paneles();
-//				controlEsc.getContentPane().removeAll();
+				controlEsc.getContentPane().removeAll();
 //				iniciado = true;
 				menu();
 			}
@@ -478,7 +478,60 @@ public class Proyecto {
 				super.paintComponent(create);
 				Graphics2D g2d = (Graphics2D) create;
 
-				pintar_bases(alumnos_panel, g2d);
+				g2d.setColor(Color.black);
+				g2d.fillRoundRect(20, 10, 850, 545, 30, 30);
+
+				g2d.setColor(Color.decode("#E7CD70"));
+				g2d.fillRoundRect(30, 15, 830, 535, 30, 30);
+				try {
+					BufferedImage image = ImageIO.read(getClass().getResource("/media/boton-de-retroceso.png"));
+					g2d.drawImage(image, 40, 25, 50, 50, null);
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				JButton regresar_btn = new JButton();
+				regresar_btn.setBounds(40, 25, 50, 50);
+				regresar_btn.setBorderPainted(false);
+				regresar_btn.setContentAreaFilled(false);
+				regresar_btn.addMouseListener(new MouseListener() {
+
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void mouseExited(MouseEvent e) {
+						controlEsc.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						controlEsc.setCursor(new Cursor(Cursor.HAND_CURSOR));
+					}
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+				regresar_btn.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						controlEsc.getContentPane().removeAll();
+					}
+				});
 			}
 		};
 		alumnos_panel.setLayout(null);

@@ -9,11 +9,15 @@ public class Auth {
 		view = new AuthView();
 	}
 
+	public void iniciar() {
+		view.iniciar();
+	}
+
 	public void login() {
 		view.login();
 	}
 
 	public void registro() {
-
+		view.registro();
 	}
 }
