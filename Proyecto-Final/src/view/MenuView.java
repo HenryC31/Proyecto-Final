@@ -17,17 +17,28 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import controllers.AlumnosController;
+import controllers.Auth;
+import controllers.DocentesController;
+import controllers.GruposController;
+import controllers.MateriasController;
+
 public class MenuView {
 	JFrame controlEsc;
 	JPanel menu_panel;
+	Auth inicio = new Auth();
+	AlumnosController alumn_controlador;
+	GruposController grupos_controlador;
+	DocentesController doc_controlador;
+	MateriasController mat_controlador;
 
 	public MenuView() {
 		iniciar();
 	}
 
 	public void iniciar() {
-//		controlador = new Auth();
 		controlEsc = new JFrame("Control Escolar - Menú");
+		controlEsc.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		controlEsc.setVisible(true);
 		controlEsc.setSize(900, 600);
 		controlEsc.setResizable(false);
@@ -35,16 +46,12 @@ public class MenuView {
 		controlEsc.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		ImageIcon icono = new ImageIcon(getClass().getResource("/media/lapiz.png"));
 		controlEsc.setIconImage(icono.getImage());
-//		login();
-//		menu();
 		controlEsc.repaint();
 		controlEsc.revalidate();
 
 	}
 
 	public void menu() {
-		controlEsc.setTitle("Control Escolar - Menú");
-		controlEsc.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
 		menu_panel = new JPanel() {
 			@Override
@@ -148,7 +155,9 @@ public class MenuView {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controlEsc.getContentPane().removeAll();
+				controlEsc.dispose();
+				alumn_controlador = new AlumnosController();
+				alumn_controlador.alumnos();
 //				alumnos();
 			}
 		});
@@ -190,8 +199,9 @@ public class MenuView {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controlEsc.getContentPane().removeAll();
-//				docentes();
+				controlEsc.dispose();
+				doc_controlador = new DocentesController();
+				doc_controlador.docentes();
 			}
 		});
 		menu_panel.add(docentes_btn);
@@ -217,23 +227,18 @@ public class MenuView {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				controlEsc.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-//				fondo_alumno.setBackground(Color.decode("#E7CD70"));
-//				controlEsc.repaint();
-//				controlEsc.revalidate();
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				controlEsc.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//				fondo_alumno.setBackground(Color.decode("#FFF5D1"));
-//				controlEsc.repaint();
-//				controlEsc.revalidate();
 			}
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controlEsc.getContentPane().removeAll();
-//				materias();
+				controlEsc.dispose();
+				mat_controlador = new MateriasController();
+				mat_controlador.materias();
 			}
 		});
 		menu_panel.add(materias_btn);
@@ -274,8 +279,9 @@ public class MenuView {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controlEsc.getContentPane().removeAll();
-//				grupos();
+				controlEsc.dispose();
+				grupos_controlador = new GruposController();
+				grupos_controlador.grupos();
 			}
 		});
 		menu_panel.add(grupos_btn);
@@ -316,9 +322,9 @@ public class MenuView {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-//				iniciado = false;
-//				controlEsc.getContentPane().removeAll();
-//				login();
+				controlEsc.dispose();
+				inicio.iniciar();
+				inicio.login();
 			}
 		});
 		menu_panel.add(salir_btn);
@@ -327,4 +333,5 @@ public class MenuView {
 		controlEsc.repaint();
 		controlEsc.revalidate();
 	}
+
 }

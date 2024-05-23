@@ -17,25 +17,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import controllers.AlumnosController;
-import controllers.DocentesController;
-import controllers.GruposController;
-import controllers.MateriasController;
 import controllers.MenuController;
+import models.AuthModel;
 
 public class AuthView {
 //	JPanel panel_principal;
 	MenuController controlador;
 	JFrame controlEsc;
 	JPanel login_panel = new JPanel();
-	AlumnosController alumn_controlador = new AlumnosController();
-	GruposController grupos_controlador = new GruposController();
-	DocentesController doc_controlador = new DocentesController();
-	MateriasController mat_controlador = new MateriasController();
+	AuthModel modelo = new AuthModel();
 
 	public AuthView() {
 
@@ -149,9 +144,15 @@ public class AuthView {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controlEsc.dispose();
-				controlador = new MenuController();
-				controlador.menu();
+				String pass = new String(contra_psw.getPassword());
+				System.out.println(pass);
+				if (modelo.login(usuario_txt.getText(), pass)) {
+					controlEsc.dispose();
+					controlador = new MenuController();
+					controlador.menu();
+				} else {
+					JOptionPane.showMessageDialog(controlEsc, "Verifica los datos papito");
+				}
 			}
 		});
 		login_formulario_panel.add(login_btn);
