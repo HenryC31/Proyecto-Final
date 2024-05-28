@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -18,8 +19,12 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import controllers.MenuController;
+import models.Alumno;
 import models.AlumnosModel;
 
 public class AlumnosView {
@@ -116,30 +121,23 @@ public class AlumnosView {
 		alumnos_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
 		alumnos_panel.add(alumnos_tag);
 
-		String hola = modelo.consultar();
-		System.out.println(hola);
 //		JPanel tabla_panel = new JPanel();
 //		tabla_panel.setBounds(143, 200, 700, 300);
-//
-//		List<String[]> alumnos = modelo.consultar();
-//		String[] titulos = { "No. Control", "Nombre", "Ap. Paterno", "Ap. Materno", "Teléfono", "Grupo",
-//				"Información" };
-//
-//		String[][] data = new String[7][alumnos.size()];
-//		for (int i = 0; i < alumnos.size(); i++) {
-//			for (int j = 0; j < 7; j++) {
-//				data[j][i] = alumnos.get(0)[j];
-//			}
-//		}
-//
-//		// Crear la tabla con los datos y las columnas
-//		JTable table = new JTable(data, titulos);
-//
-//		// Agregar la tabla a un JScrollPane para que se pueda desplazar
-//		JScrollPane scrollPane = new JScrollPane(table);
-//
-//		scrollPane.setBounds(75, 120, 750, 350);
-//		alumnos_panel.add(scrollPane);
+
+		String[] titulos = { "No. Control", "Nombre", "Ap. Paterno", "Ap. Materno", "Teléfono", "Grupo",
+				"Información" };
+		List<Alumno> alumnos = modelo.obtener();
+		DefaultTableModel model = new DefaultTableModel(titulos, 0);
+		JTable table = new JTable(model);
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(75, 120, 750, 350);
+		alumnos_panel.add(scrollPane);
+
+		for (Alumno alumno : alumnos) {
+			Object[] row = { alumno.getNo_control(), alumno.getNombre(), alumno.getAp_Paterno(), alumno.getAp_Materno(),
+					alumno.getTelefono(), "", "" };
+			model.addRow(row);
+		}
 
 		JButton detalles_btn = new JButton("Detalles");
 		detalles_btn.setBounds(143, 500, 135, 35);

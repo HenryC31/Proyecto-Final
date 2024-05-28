@@ -14,38 +14,46 @@ public class AlumnosModel {
 
 	}
 
-	public String consultar() {
-		List<String[]> datos = new ArrayList<>();
+	public List<Alumno> obtener() {
+		List<Alumno> alumnos = new ArrayList<>();
 		String[] dato = new String[5];
 		String hola = "";
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
 
-			Connection con = DriverManager.getConnection("jdbc:mysql://sql.freedb.tech:3306/freedb_Control_Esc_Project",
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://sql.freedb.tech:3306/freedb_Control_Esc_Project",
 					"freedb_henryc22", "G9er4**hJF6s52R");
 
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(
-					"SELECT no_control, nombre, apellido_M, apellido_P, curp, fecha_n, correo, telefono\r\n"
-							+ "FROM Alumnos");
+			stmt = con.createStatement();
+			rs = stmt.executeQuery("SELECT no_control, nombre, apellido_M, apellido_P, telefono\r\n" + "FROM Alumnos");
 
 			while (rs.next()) {
-//				dato[0] = rs.getString(1);
-//				dato[1] = rs.getString(2);
-//				dato[2] = rs.getString(3);
-//				dato[3] = rs.getString(4);
-//				dato[4] = rs.getString(8);
-//				datos.add(dato);
-				hola = rs.getInt(1) + rs.getString(2) + rs.getString(3);
+				int noControl = rs.getInt("no_control");
+				String nombre = rs.getString("nombre");
+				String apellidoM = rs.getString("apellido_M");
+				String apellidoP = rs.getString("apellido_P");
+				String telefono = rs.getString("telefono");
 
-//				System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3) + rs.getString(4) + " "
-//						+ rs.getString(5) + " " + rs.getString(6) + " " + rs.getString(7) + " " + rs.getString(8));
+				Alumno alumno = new Alumno(noControl, nombre, apellidoP, apellidoM, telefono);
+				alumnos.add(alumno);
 			}
 			con.close();
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-//		return datos;
-		return hola;
+		return alumnos;
 	}
 }
