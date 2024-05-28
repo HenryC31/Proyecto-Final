@@ -20,11 +20,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controllers.MenuController;
+import models.AlumnosModel;
 
 public class AlumnosView {
 	MenuController menu;
 	JFrame controlEsc = new JFrame();
 	JPanel alumnos_panel = new JPanel();
+	AlumnosModel modelo = new AlumnosModel();
 
 	public AlumnosView() {
 		controlEsc.setTitle("Control Escolar - Alumnos");
@@ -114,8 +116,33 @@ public class AlumnosView {
 		alumnos_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
 		alumnos_panel.add(alumnos_tag);
 
+		String hola = modelo.consultar();
+		System.out.println(hola);
+//		JPanel tabla_panel = new JPanel();
+//		tabla_panel.setBounds(143, 200, 700, 300);
+//
+//		List<String[]> alumnos = modelo.consultar();
+//		String[] titulos = { "No. Control", "Nombre", "Ap. Paterno", "Ap. Materno", "Teléfono", "Grupo",
+//				"Información" };
+//
+//		String[][] data = new String[7][alumnos.size()];
+//		for (int i = 0; i < alumnos.size(); i++) {
+//			for (int j = 0; j < 7; j++) {
+//				data[j][i] = alumnos.get(0)[j];
+//			}
+//		}
+//
+//		// Crear la tabla con los datos y las columnas
+//		JTable table = new JTable(data, titulos);
+//
+//		// Agregar la tabla a un JScrollPane para que se pueda desplazar
+//		JScrollPane scrollPane = new JScrollPane(table);
+//
+//		scrollPane.setBounds(75, 120, 750, 350);
+//		alumnos_panel.add(scrollPane);
+
 		JButton detalles_btn = new JButton("Detalles");
-		detalles_btn.setBounds(143, 450, 135, 50);
+		detalles_btn.setBounds(143, 500, 135, 35);
 		detalles_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
 		detalles_btn.addActionListener(new ActionListener() {
 			@Override
@@ -127,7 +154,7 @@ public class AlumnosView {
 		alumnos_panel.add(detalles_btn);
 
 		JButton agregar_btn = new JButton("Agregar");
-		agregar_btn.setBounds(500, 450, 135, 50);
+		agregar_btn.setBounds(600, 500, 135, 35);
 		agregar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
 		agregar_btn.addActionListener(new ActionListener() {
 			@Override

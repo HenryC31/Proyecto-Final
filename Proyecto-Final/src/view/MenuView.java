@@ -65,6 +65,20 @@ public class MenuView {
 				g2d.setColor(Color.decode("#E7CD70"));
 				g2d.fillRoundRect(30, 15, 830, 535, 30, 30);
 
+				g2d.setColor(Color.black);
+				g2d.fillRoundRect(94, 149, 172, 177, 30, 30);
+				g2d.fillRoundRect(354, 149, 172, 177, 30, 30);
+				g2d.fillRoundRect(94, 349, 172, 177, 30, 30);
+				g2d.fillRoundRect(629, 349, 172, 177, 30, 30);
+				g2d.fillRoundRect(629, 149, 172, 177, 30, 30);
+
+				g2d.setColor(Color.decode("#FFF5D1"));
+				g2d.fillRoundRect(95, 150, 170, 175, 30, 30);
+				g2d.fillRoundRect(355, 150, 170, 175, 30, 30);
+				g2d.fillRoundRect(95, 350, 170, 175, 30, 30);
+				g2d.fillRoundRect(630, 350, 170, 175, 30, 30);
+				g2d.fillRoundRect(630, 150, 170, 175, 30, 30);
+
 				try {
 					BufferedImage image = ImageIO.read(getClass().getResource("/media/alumno (1).png"));
 					g2d.drawImage(image, 115, 160, 130, 130, null);
