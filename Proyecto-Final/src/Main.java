@@ -1,6 +1,6 @@
 import controllers.Auth;
 
-public class main {
+public class Main {
 
 	public static void main(String[] args) {
 		Auth controlador = new Auth();

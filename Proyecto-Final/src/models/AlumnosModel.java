@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import clases.Alumno;
+
 public class AlumnosModel {
 
 	public AlumnosModel() {
@@ -55,5 +57,27 @@ public class AlumnosModel {
 			}
 		}
 		return alumnos;
+	}
+
+	public boolean agregar(String no_control, String nombre, String ap_Paterno, String ap_Materno, String curp,
+			String fecha_n, String correo, String telefono) {
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		try {
+			con = DriverManager.getConnection("jdbc:mysql://sql.freedb.tech:3306/freedb_Control_Esc_Project",
+					"freedb_henryc22", "G9er4**hJF6s52R");
+
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(
+					"INSERT INTO Alumnos (no_control, nombre, apellido_M, apellido_P, curp, fecha_n, correo, telefono) VALUES ('"
+							+ no_control + "', '" + nombre + "', '" + ap_Paterno + "', '" + ap_Materno + "', '" + curp
+							+ "', '" + fecha_n + "', '" + correo + "', '" + telefono + "')");
+			con.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

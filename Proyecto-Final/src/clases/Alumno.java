@@ -1,4 +1,4 @@
-package models;
+package clases;
 
 public class Alumno {
 	private int no_control;
