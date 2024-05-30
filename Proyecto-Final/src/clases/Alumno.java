@@ -1,11 +1,28 @@
 package clases;
 
+import java.sql.Date;
+
 public class Alumno {
 	private int no_control;
 	private String nombre;
 	private String ap_Paterno;
 	private String ap_Materno;
+	private String curp;
+	private Date fecha_n;
+	private String correo;
 	private String telefono;
+
+	public Alumno(int no_control, String nombre, String ap_Paterno, String ap_Materno, String curp, Date fecha_n,
+			String correo, String telefono) {
+		this.no_control = no_control;
+		this.nombre = nombre;
+		this.ap_Paterno = ap_Paterno;
+		this.ap_Materno = ap_Materno;
+		this.curp = curp;
+		this.fecha_n = fecha_n;
+		this.correo = correo;
+		this.telefono = telefono;
+	}
 
 	public Alumno(int no_control, String nombre, String ap_Paterno, String ap_Materno, String telefono) {
 		this.no_control = no_control;
@@ -53,5 +70,29 @@ public class Alumno {
 
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
+	}
+
+	public String getCurp() {
+		return curp;
+	}
+
+	public void setCurp(String curp) {
+		this.curp = curp;
+	}
+
+	public Date getFecha_n() {
+		return fecha_n;
+	}
+
+	public void setFecha_n(Date fecha_n) {
+		this.fecha_n = fecha_n;
+	}
+
+	public String getCorreo() {
+		return correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
 	}
 }
