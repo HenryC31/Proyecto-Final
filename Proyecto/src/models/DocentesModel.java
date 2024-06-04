@@ -152,34 +152,34 @@ public class DocentesModel {
 		return eliminado;
 	}
 
-//	public boolean editar(int no_control, Alumno alumn) {
-//		Alumno alumno = alumn;
-//		boolean editado = false;
-//		Connection con = null;
-//		Statement stmt = null;
-//		boolean rs = false;
-//		try {
-//			con = DriverManager.getConnection(url, usuario, contra);
-//			stmt = con.createStatement();
-//			rs = stmt.execute("update Alumnos set nombre = '" + alumno.getNombre() + "',apellido_M = '"
-//					+ alumno.getAp_Materno() + "',apellido_P = '" + alumno.getAp_Paterno() + "',curp = '"
-//					+ alumno.getCurp() + "',fecha_n = '" + alumno.getFecha_n() + "',correo = '" + alumno.getCorreo()
-//					+ "',telefono = '" + alumno.getTelefono() + "' where no_control = " + no_control + ";");
-//			editado = true;
-//			con.close();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				if (stmt != null)
-//					stmt.close();
-//				if (con != null)
-//					con.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return editado;
-//	}
+	public boolean editar(String rfc, Docente docent) {
+		Docente docente = docent;
+		boolean editado = false;
+		Connection con = null;
+		Statement stmt = null;
+		boolean rs = false;
+		try {
+			con = DriverManager.getConnection(url, usuario, contra);
+			stmt = con.createStatement();
+			rs = stmt.execute("update Docentes set nombre = '" + docente.getNombre() + "',ap_paterno = '"
+					+ docente.getAp_paterno() + "',ap_materno = '" + docente.getAp_materno() + "',fecha_nac = '"
+					+ docente.getFecha_n() + "',correo = '" + docente.getCorreo() + "',telefono = '"
+					+ docente.getTelefono() + "' where rfc = " + rfc + ";");
+			editado = true;
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return editado;
+	}
 
 }

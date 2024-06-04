@@ -11,21 +11,29 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
+import clases.Docente;
 import controllers.MenuController;
+import models.DocentesModel;
 
 public class DocentesView {
 
 	JFrame controlEsc = new JFrame();
 	MenuController menu;
 	JPanel docentes_panel = new JPanel();
+	DocentesModel modelo = new DocentesModel();
 
 	public DocentesView() {
 
@@ -112,24 +120,48 @@ public class DocentesView {
 		docentes_panel.add(regresar_btn);
 
 		JLabel docentes_tag = new JLabel("DOCENTES");
-		docentes_tag.setBounds(340, 50, 240, 50);
+		docentes_tag.setBounds(340, 50, 210, 50);
 		docentes_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
 		docentes_panel.add(docentes_tag);
 
+//		JPanel tabla_panel = new JPanel();
+//		tabla_panel.setBounds(143, 200, 700, 300);
+
+		String[] titulos = { "RFC", "Nombre", "Ap. Paterno", "Ap. Materno", "Teléfono", "Grupo", "Información" };
+		List<Docente> docentes = modelo.obtenerTodos();
+		DefaultTableModel model = new DefaultTableModel(titulos, 0);
+		JTable table = new JTable(model);
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(75, 120, 750, 350);
+		docentes_panel.add(scrollPane);
+
+		for (Docente docente : docentes) {
+			Object[] row = { docente.getRfc(), docente.getNombre(), docente.getAp_paterno(), docente.getAp_materno(),
+					docente.getTelefono(), "", "" };
+			model.addRow(row);
+		}
+
 		JButton detalles_btn = new JButton("Detalles");
-		detalles_btn.setBounds(143, 450, 135, 50);
+		detalles_btn.setBounds(143, 500, 135, 35);
 		detalles_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
 		detalles_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controlEsc.getContentPane().removeAll();
-				detalles();
+				if (table.getSelectedRow() != -1) {
+					Object value = table.getValueAt(table.getSelectedRow(), 0);
+					String valor = (String) value;
+					controlEsc.getContentPane().removeAll();
+					detalles(valor);
+
+				} else {
+					JOptionPane.showMessageDialog(docentes_panel, "Selecciona una fila");
+				}
 			}
 		});
 		docentes_panel.add(detalles_btn);
 
 		JButton agregar_btn = new JButton("Agregar");
-		agregar_btn.setBounds(500, 450, 135, 50);
+		agregar_btn.setBounds(600, 500, 135, 35);
 		agregar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
 		agregar_btn.addActionListener(new ActionListener() {
 			@Override
@@ -288,7 +320,7 @@ public class DocentesView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controlEsc.getContentPane().removeAll();
-				detalles();
+				docentes();
 			}
 		});
 
@@ -304,7 +336,9 @@ public class DocentesView {
 		controlEsc.revalidate();
 	}
 
-	public void detalles() {
+	public void detalles(String rfc) {
+
+		Docente docente = modelo.obtenerDocente(rfc);
 
 		JPanel detalles_panel = new JPanel() {
 			@Override
