@@ -24,6 +24,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import clases.Alumno;
@@ -130,8 +132,22 @@ public class AlumnosView {
 		String[] titulos = { "No. Control", "Nombre", "Ap. Paterno", "Ap. Materno", "Teléfono", "Grupo",
 				"Información" };
 		List<Alumno> alumnos = modelo.obtenerTodos();
-		DefaultTableModel model = new DefaultTableModel(titulos, 0);
+		DefaultTableModel model = new DefaultTableModel(titulos, 0) {
+			// Bloque para evitar que se editen las celdas
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		JTable table = new JTable(model);
+
+		// Bloque para centrar los datos en la tabla
+		DefaultTableCellRenderer centrar = new DefaultTableCellRenderer();
+		centrar.setHorizontalAlignment(SwingConstants.CENTER);
+		for (int i = 0; i < table.getColumnCount(); i++) {
+			table.getColumnModel().getColumn(i).setCellRenderer(centrar);
+		}
+
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(75, 120, 750, 350);
 		alumnos_panel.add(scrollPane);

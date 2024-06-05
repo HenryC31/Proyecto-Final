@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class Docente {
 
+	private int id;
 	private String rfc;
 	private String nombre;
 	private String ap_paterno;
@@ -11,6 +12,18 @@ public class Docente {
 	private Date fecha_n;
 	private String correo;
 	private String telefono;
+
+	public Docente(int id, String rfc, String nombre, String ap_Paterno, String ap_Materno, Date fecha_n, String correo,
+			String telefono) {
+		this.id = id;
+		this.rfc = rfc;
+		this.nombre = nombre;
+		this.ap_paterno = ap_Paterno;
+		this.ap_materno = ap_Materno;
+		this.fecha_n = fecha_n;
+		this.correo = correo;
+		this.telefono = telefono;
+	}
 
 	public Docente(String rfc, String nombre, String ap_Paterno, String ap_Materno, Date fecha_n, String correo,
 			String telefono) {
@@ -23,7 +36,8 @@ public class Docente {
 		this.telefono = telefono;
 	}
 
-	public Docente(String rfc, String nombre, String ap_Paterno, String ap_Materno, String telefono) {
+	public Docente(int id, String rfc, String nombre, String ap_Paterno, String ap_Materno, String telefono) {
+		this.id = id;
 		this.rfc = rfc;
 		this.nombre = nombre;
 		this.ap_paterno = ap_Paterno;
@@ -85,6 +99,14 @@ public class Docente {
 
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

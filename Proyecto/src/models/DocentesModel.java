@@ -30,16 +30,17 @@ public class DocentesModel {
 			con = DriverManager.getConnection(url, usuario, contra);
 
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT rfc, nombre, ap_paterno, ap_materno, telefono\r\n" + "FROM Docentes");
+			rs = stmt.executeQuery("SELECT id, rfc, nombre, ap_paterno, ap_materno, telefono\r\n" + "FROM Docentes");
 
 			while (rs.next()) {
+				int id = rs.getInt("id");
 				String rfc = rs.getString("rfc");
 				String nombre = rs.getString("nombre");
-				String apellidoM = rs.getString("ap_paterno");
-				String apellidoP = rs.getString("ap_materno");
+				String apellidoP = rs.getString("ap_paterno");
+				String apellidoM = rs.getString("ap_materno");
 				String telefono = rs.getString("telefono");
 
-				Docente docente = new Docente(rfc, nombre, apellidoP, apellidoM, telefono);
+				Docente docente = new Docente(id, rfc, nombre, apellidoP, apellidoM, telefono);
 				docentes.add(docente);
 			}
 			con.close();
@@ -67,12 +68,12 @@ public class DocentesModel {
 
 		try {
 			connection = DriverManager.getConnection(url, usuario, contra);
-			String query = "INSERT INTO Docentes (rfc, nombre, ap_paterno, ap_materno, fecha_n, correo, telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			String query = "INSERT INTO Docentes (rfc, nombre, ap_paterno, ap_materno, fecha_nac, correo, telefono) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			statement = connection.prepareStatement(query);
 			statement.setString(1, docente.getRfc());
 			statement.setString(2, docente.getNombre());
-			statement.setString(4, docente.getAp_paterno());
-			statement.setString(3, docente.getAp_materno());
+			statement.setString(3, docente.getAp_paterno());
+			statement.setString(4, docente.getAp_materno());
 			statement.setDate(5, docente.getFecha_n());
 			statement.setString(6, docente.getCorreo());
 			statement.setString(7, docente.getTelefono());
@@ -94,7 +95,7 @@ public class DocentesModel {
 		return inserted;
 	}
 
-	public Docente obtenerDocente(String rfc) {
+	public Docente obtenerDocente(int id) {
 		Docente docente = null;
 		Connection con = null;
 		Statement stmt = null;
@@ -102,11 +103,11 @@ public class DocentesModel {
 		try {
 			con = DriverManager.getConnection(url, usuario, contra);
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM Docentes WHERE rfc = '" + rfc + "'");
+			rs = stmt.executeQuery("SELECT * FROM Docentes WHERE id = '" + id + "'");
 
 			while (rs.next()) {
-				docente = new Docente(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDate(5),
-						rs.getString(6), rs.getString(7));
+				docente = new Docente(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getDate(6), rs.getString(7), rs.getString(8));
 			}
 			con.close();
 		} catch (SQLException e) {
@@ -126,7 +127,7 @@ public class DocentesModel {
 		return docente;
 	}
 
-	public boolean eliminar(String rfc) {
+	public boolean eliminar(int id) {
 		boolean eliminado = false;
 		Connection con = null;
 		Statement stmt = null;
@@ -134,7 +135,7 @@ public class DocentesModel {
 		try {
 			con = DriverManager.getConnection(url, usuario, contra);
 			stmt = con.createStatement();
-			rs = stmt.execute("delete from Alumnos where rfc = " + rfc + ";");
+			rs = stmt.execute("delete from Docentes where id = " + id + ";");
 			eliminado = true;
 			con.close();
 		} catch (SQLException e) {
@@ -152,7 +153,7 @@ public class DocentesModel {
 		return eliminado;
 	}
 
-	public boolean editar(String rfc, Docente docent) {
+	public boolean editar(int id, Docente docent) {
 		Docente docente = docent;
 		boolean editado = false;
 		Connection con = null;
@@ -164,7 +165,7 @@ public class DocentesModel {
 			rs = stmt.execute("update Docentes set nombre = '" + docente.getNombre() + "',ap_paterno = '"
 					+ docente.getAp_paterno() + "',ap_materno = '" + docente.getAp_materno() + "',fecha_nac = '"
 					+ docente.getFecha_n() + "',correo = '" + docente.getCorreo() + "',telefono = '"
-					+ docente.getTelefono() + "' where rfc = " + rfc + ";");
+					+ docente.getTelefono() + "' where id = " + id + ";");
 			editado = true;
 			con.close();
 		} catch (SQLException e) {
