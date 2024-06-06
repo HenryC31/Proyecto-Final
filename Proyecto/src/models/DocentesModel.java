@@ -64,7 +64,7 @@ public class DocentesModel {
 	public boolean insertarDocente(Docente docente) {
 		Connection connection = null;
 		java.sql.PreparedStatement statement = null;
-		boolean inserted = false;
+		boolean insertado = false;
 
 		try {
 			connection = DriverManager.getConnection(url, usuario, contra);
@@ -79,7 +79,7 @@ public class DocentesModel {
 			statement.setString(7, docente.getTelefono());
 
 			int rows = statement.executeUpdate();
-			inserted = rows > 0;
+			insertado = rows > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -92,7 +92,7 @@ public class DocentesModel {
 				e.printStackTrace();
 			}
 		}
-		return inserted;
+		return insertado;
 	}
 
 	public Docente obtenerDocente(int id) {

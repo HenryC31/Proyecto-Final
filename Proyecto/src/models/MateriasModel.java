@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import clases.Docente;
 import clases.Materia;
 
 public class MateriasModel {
@@ -59,25 +58,21 @@ public class MateriasModel {
 		return materias;
 	}
 
-	public boolean insertarDocente(Docente docente) {
+	public boolean insertarMateria(Materia materia) {
 		Connection connection = null;
 		java.sql.PreparedStatement statement = null;
-		boolean inserted = false;
+		boolean insertado = false;
 
 		try {
 			connection = DriverManager.getConnection(url, usuario, contra);
-			String query = "INSERT INTO Docentes (rfc, nombre, ap_paterno, ap_materno, fecha_nac, correo, telefono) VALUES (?, ?, ?, ?, ?, ?, ?)";
+			String query = "INSERT INTO materias (nombre, horario, aula) VALUES (?, ?, ?)";
 			statement = connection.prepareStatement(query);
-			statement.setString(1, docente.getRfc());
-			statement.setString(2, docente.getNombre());
-			statement.setString(3, docente.getAp_paterno());
-			statement.setString(4, docente.getAp_materno());
-			statement.setDate(5, docente.getFecha_n());
-			statement.setString(6, docente.getCorreo());
-			statement.setString(7, docente.getTelefono());
+			statement.setString(1, materia.getNombre());
+			statement.setString(2, materia.getHorario());
+			statement.setString(3, materia.getAula());
 
 			int rows = statement.executeUpdate();
-			inserted = rows > 0;
+			insertado = rows > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -90,22 +85,21 @@ public class MateriasModel {
 				e.printStackTrace();
 			}
 		}
-		return inserted;
+		return insertado;
 	}
 
-	public Docente obtenerDocente(int id) {
-		Docente docente = null;
+	public Materia obtenerMateria(int id) {
+		Materia materia = null;
 		Connection con = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
 			con = DriverManager.getConnection(url, usuario, contra);
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM Docentes WHERE id = '" + id + "'");
+			rs = stmt.executeQuery("SELECT * FROM materias WHERE id = '" + id + "'");
 
 			while (rs.next()) {
-				docente = new Docente(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-						rs.getDate(6), rs.getString(7), rs.getString(8));
+				materia = new Materia(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
 			}
 			con.close();
 		} catch (SQLException e) {
@@ -122,7 +116,7 @@ public class MateriasModel {
 				e.printStackTrace();
 			}
 		}
-		return docente;
+		return materia;
 	}
 
 	public boolean eliminar(int id) {
@@ -133,7 +127,7 @@ public class MateriasModel {
 		try {
 			con = DriverManager.getConnection(url, usuario, contra);
 			stmt = con.createStatement();
-			rs = stmt.execute("delete from Docentes where id = " + id + ";");
+			rs = stmt.execute("delete from materias where id = " + id + ";");
 			eliminado = true;
 			con.close();
 		} catch (SQLException e) {
@@ -151,8 +145,8 @@ public class MateriasModel {
 		return eliminado;
 	}
 
-	public boolean editar(int id, Docente docent) {
-		Docente docente = docent;
+	public boolean editar(int id, Materia mat) {
+		Materia materia = mat;
 		boolean editado = false;
 		Connection con = null;
 		Statement stmt = null;
@@ -160,10 +154,8 @@ public class MateriasModel {
 		try {
 			con = DriverManager.getConnection(url, usuario, contra);
 			stmt = con.createStatement();
-			rs = stmt.execute("update Docentes set nombre = '" + docente.getNombre() + "',ap_paterno = '"
-					+ docente.getAp_paterno() + "',ap_materno = '" + docente.getAp_materno() + "',fecha_nac = '"
-					+ docente.getFecha_n() + "',correo = '" + docente.getCorreo() + "',telefono = '"
-					+ docente.getTelefono() + "' where id = " + id + ";");
+			rs = stmt.execute("update materias set nombre = '" + materia.getNombre() + "',horario = '"
+					+ materia.getHorario() + "',aula = '" + materia.getAula() + "' where id = " + id + ";");
 			editado = true;
 			con.close();
 		} catch (SQLException e) {

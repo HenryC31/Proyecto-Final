@@ -10,6 +10,7 @@ public class Grupo {
 
 	public Grupo(String nombre, String profesor, String materia_uno, String materia_dos, String materia_tres) {
 		this.nombre = nombre;
+		this.profesor = profesor;
 		this.materia_dos = materia_dos;
 		this.materia_tres = materia_tres;
 		this.materia_uno = materia_uno;
@@ -18,6 +19,7 @@ public class Grupo {
 	public Grupo(int id, String nombre, String profesor, String materia_uno, String materia_dos, String materia_tres) {
 		this.id = id;
 		this.nombre = nombre;
+		this.profesor = profesor;
 		this.materia_dos = materia_dos;
 		this.materia_tres = materia_tres;
 		this.materia_uno = materia_uno;
@@ -61,6 +63,14 @@ public class Grupo {
 
 	public void setMateria_tres(String materia_tres) {
 		this.materia_tres = materia_tres;
+	}
+
+	public String getProfesor() {
+		return profesor;
+	}
+
+	public void setProfesor(String profesor) {
+		this.profesor = profesor;
 	}
 
 }

@@ -62,25 +62,23 @@ public class GruposModel {
 		return grupos;
 	}
 
-	public boolean insertarDocente(Docente docente) {
+	public boolean insertarGrupo(Grupo grupo) {
 		Connection connection = null;
 		java.sql.PreparedStatement statement = null;
-		boolean inserted = false;
+		boolean insertado = false;
 
 		try {
 			connection = DriverManager.getConnection(url, usuario, contra);
-			String query = "INSERT INTO Docentes (rfc, nombre, ap_paterno, ap_materno, fecha_nac, correo, telefono) VALUES (?, ?, ?, ?, ?, ?, ?)";
+			String query = "INSERT INTO grupos (nombre, profesor, materia_uno, materia_dos, materia_tres) VALUES (?, ?, ?, ?, ?)";
 			statement = connection.prepareStatement(query);
-			statement.setString(1, docente.getRfc());
-			statement.setString(2, docente.getNombre());
-			statement.setString(3, docente.getAp_paterno());
-			statement.setString(4, docente.getAp_materno());
-			statement.setDate(5, docente.getFecha_n());
-			statement.setString(6, docente.getCorreo());
-			statement.setString(7, docente.getTelefono());
+			statement.setString(1, grupo.getNombre());
+			statement.setString(2, grupo.getProfesor());
+			statement.setString(3, grupo.getMateria_uno());
+			statement.setString(4, grupo.getMateria_dos());
+			statement.setString(5, grupo.getMateria_tres());
 
 			int rows = statement.executeUpdate();
-			inserted = rows > 0;
+			insertado = rows > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -93,22 +91,22 @@ public class GruposModel {
 				e.printStackTrace();
 			}
 		}
-		return inserted;
+		return insertado;
 	}
 
-	public Docente obtenerDocente(int id) {
-		Docente docente = null;
+	public Grupo obtenerGrupo(int id) {
+		Grupo grupo = null;
 		Connection con = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
 			con = DriverManager.getConnection(url, usuario, contra);
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM Docentes WHERE id = '" + id + "'");
+			rs = stmt.executeQuery("SELECT * FROM grupos WHERE id = '" + id + "'");
 
 			while (rs.next()) {
-				docente = new Docente(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
-						rs.getDate(6), rs.getString(7), rs.getString(8));
+				grupo = new Grupo(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6));
 			}
 			con.close();
 		} catch (SQLException e) {
@@ -125,7 +123,7 @@ public class GruposModel {
 				e.printStackTrace();
 			}
 		}
-		return docente;
+		return grupo;
 	}
 
 	public boolean eliminar(int id) {
@@ -136,7 +134,7 @@ public class GruposModel {
 		try {
 			con = DriverManager.getConnection(url, usuario, contra);
 			stmt = con.createStatement();
-			rs = stmt.execute("delete from Docentes where id = " + id + ";");
+			rs = stmt.execute("delete from grupos where id = " + id + ";");
 			eliminado = true;
 			con.close();
 		} catch (SQLException e) {
