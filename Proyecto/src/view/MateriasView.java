@@ -16,12 +16,14 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -120,10 +122,10 @@ public class MateriasView {
 
 		materias_panel.add(regresar_btn);
 
-		JLabel docentes_tag = new JLabel("Materias");
-		docentes_tag.setBounds(320, 50, 240, 50);
-		docentes_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
-		materias_panel.add(docentes_tag);
+		JLabel materias_tag = new JLabel("Materias");
+		materias_tag.setBounds(350, 50, 240, 50);
+		materias_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
+		materias_panel.add(materias_tag);
 
 //		JPanel tabla_panel = new JPanel();
 //		tabla_panel.setBounds(143, 200, 700, 300);
@@ -193,7 +195,7 @@ public class MateriasView {
 	}
 
 	public void agregar() {
-		JPanel detalles_panel = new JPanel() {
+		JPanel agregar_panel = new JPanel() {
 			@Override
 			public void paintComponent(Graphics create) {
 				super.paintComponent(create);
@@ -205,8 +207,8 @@ public class MateriasView {
 				g2d.setColor(Color.decode("#E7CD70"));
 				g2d.fillRoundRect(30, 15, 830, 535, 30, 30);
 				try {
-					BufferedImage image = ImageIO.read(getClass().getResource("/media/boton-de-retroceso.png"));
-					g2d.drawImage(image, 40, 25, 50, 50, null);
+					BufferedImage image = ImageIO.read(getClass().getResource("/media/papeleria.png"));
+					g2d.drawImage(image, 480, 160, 300, 300, null);
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -214,65 +216,103 @@ public class MateriasView {
 
 			}
 		};
-		detalles_panel.setLayout(null);
+		agregar_panel.setLayout(null);
 
-		JButton regresar_btn = new JButton();
-		regresar_btn.setBounds(40, 25, 50, 50);
-		regresar_btn.setBorderPainted(false);
-		regresar_btn.setContentAreaFilled(false);
-		regresar_btn.addMouseListener(new MouseListener() {
+		JLabel agregar_tag = new JLabel("Agregar Materia");
+		agregar_tag.setBounds(282, 30, 335, 50);
+		agregar_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
+		agregar_panel.add(agregar_tag);
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
+		JLabel nombre_tag = new JLabel("Nombre");
+		nombre_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nombre_tag.setBounds(74, 115, 84, 19);
+		agregar_panel.add(nombre_tag);
 
-			}
+		JTextField nombre_txt = new JTextField();
+		nombre_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		nombre_txt.setColumns(10);
+		nombre_txt.setBounds(74, 141, 210, 32);
+		agregar_panel.add(nombre_txt);
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
+		JLabel horario_tag = new JLabel("Horario");
+		horario_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		horario_tag.setBounds(74, 230, 164, 19);
+		agregar_panel.add(horario_tag);
 
-			}
+		JComboBox<String> horario_cmbox = new JComboBox<>();
+		horario_cmbox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		horario_cmbox.addItem("Selecciona el horario");
+		horario_cmbox.addItem("8:00 AM - 10:00 AM");
+		horario_cmbox.addItem("10:30 AM - 12:30 PM");
+		horario_cmbox.addItem("1:00 PM - 3:00 PM");
+		horario_cmbox.addItem("3:30 PM - 5:30 PM");
+		horario_cmbox.addItem("6:00 PM - 8:00 PM");
+		horario_cmbox.setBounds(74, 270, 210, 32);
+		agregar_panel.add(horario_cmbox);
 
-			@Override
-			public void mouseExited(MouseEvent e) {
-				controlEsc.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			}
+		JLabel aula_tag = new JLabel("Aula");
+		aula_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		aula_tag.setBounds(74, 392, 172, 19);
+		agregar_panel.add(aula_tag);
 
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				controlEsc.setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
+		JComboBox<String> aula_cmbox = new JComboBox<>();
+		aula_cmbox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		aula_cmbox.addItem("Selecciona el aula");
+		for (int i = 100; i <= 110; i++) {
+			aula_cmbox.addItem("Aula " + i);
+		}
+		aula_cmbox.setBounds(74, 418, 210, 32);
+		agregar_panel.add(aula_cmbox);
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-		regresar_btn.addActionListener(new ActionListener() {
-
+		JButton agregar_btn = new JButton("Agregar");
+		agregar_btn.setBounds(650, 500, 135, 35);
+		agregar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
+		agregar_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controlEsc.getContentPane().removeAll();
-				materias();
+				Materia materia = new Materia(nombre_txt.getText(), horario_cmbox.getSelectedItem().toString(),
+						aula_cmbox.getSelectedItem().toString());
+
+				if (materia.getHorario().equals("Selecciona el horario")
+						|| materia.getAula().equals("Selecciona el aula")) {
+					JOptionPane.showMessageDialog(agregar_panel, "Debes llenar bien los campos");
+				} else {
+					if (modelo.insertarMateria(materia)) {
+						JOptionPane.showMessageDialog(agregar_panel, "Docente agregado");
+						controlEsc.getContentPane().removeAll();
+						materias();
+					} else {
+						JOptionPane.showMessageDialog(agregar_panel, "Ocurrió un problema, revisa los datos");
+					}
+				}
+
 			}
 		});
+		agregar_panel.add(agregar_btn);
 
-		detalles_panel.add(regresar_btn);
+		JButton cancelar_btn = new JButton("Cancelar");
+		cancelar_btn.setBounds(480, 500, 135, 35);
+		cancelar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
+		cancelar_btn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(agregar_panel, "¿Seguro que desea cancelar?", "Confirmación",
+						JOptionPane.YES_NO_OPTION) == 0) {
+					System.out.println("si");
+					controlEsc.getContentPane().removeAll();
+					materias();
+				}
+			}
+		});
+		agregar_panel.add(cancelar_btn);
 
-		JLabel alumnos_tag = new JLabel("Agregar");
-		alumnos_tag.setBounds(340, 50, 210, 50);
-		alumnos_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
-		detalles_panel.add(alumnos_tag);
-
-		controlEsc.add(detalles_panel);
+		controlEsc.add(agregar_panel);
 		controlEsc.repaint();
 		controlEsc.revalidate();
 	}
 
-	public void editar(int valor) {
-		JPanel detalles_panel = new JPanel() {
+	public void editar(Materia materia) {
+		JPanel editar_panel = new JPanel() {
 			@Override
 			public void paintComponent(Graphics create) {
 				super.paintComponent(create);
@@ -284,8 +324,8 @@ public class MateriasView {
 				g2d.setColor(Color.decode("#E7CD70"));
 				g2d.fillRoundRect(30, 15, 830, 535, 30, 30);
 				try {
-					BufferedImage image = ImageIO.read(getClass().getResource("/media/boton-de-retroceso.png"));
-					g2d.drawImage(image, 40, 25, 50, 50, null);
+					BufferedImage image = ImageIO.read(getClass().getResource("/media/papeleria.png"));
+					g2d.drawImage(image, 480, 160, 300, 300, null);
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -293,65 +333,115 @@ public class MateriasView {
 
 			}
 		};
-		detalles_panel.setLayout(null);
+		editar_panel.setLayout(null);
 
-		JButton regresar_btn = new JButton();
-		regresar_btn.setBounds(40, 25, 50, 50);
-		regresar_btn.setBorderPainted(false);
-		regresar_btn.setContentAreaFilled(false);
-		regresar_btn.addMouseListener(new MouseListener() {
+		JLabel agregar_tag = new JLabel("Editar Materia");
+		agregar_tag.setBounds(282, 30, 335, 50);
+		agregar_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
+		editar_panel.add(agregar_tag);
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
+		JLabel nombre_tag = new JLabel("Nombre");
+		nombre_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nombre_tag.setBounds(74, 115, 84, 19);
+		editar_panel.add(nombre_tag);
 
-			}
+		JTextField nombre_txt = new JTextField();
+		nombre_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		nombre_txt.setText(materia.getNombre());
+		nombre_txt.setBounds(74, 141, 210, 32);
+		editar_panel.add(nombre_txt);
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
+		JLabel id_tag = new JLabel("ID");
+		id_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		id_tag.setBounds(326, 111, 164, 19);
+		editar_panel.add(id_tag);
 
-			}
+		JTextField id_txt = new JTextField();
+		id_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		id_txt.setColumns(10);
+		id_txt.setBounds(326, 141, 210, 32);
+		id_txt.setText("" + materia.getId());
+		id_txt.setEnabled(false);
+		editar_panel.add(id_txt);
 
-			@Override
-			public void mouseExited(MouseEvent e) {
-				controlEsc.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			}
+		JLabel horario_tag = new JLabel("Horario");
+		horario_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		horario_tag.setBounds(74, 230, 164, 19);
+		editar_panel.add(horario_tag);
 
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				controlEsc.setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
+		JComboBox<String> horario_cmbox = new JComboBox<>();
+		horario_cmbox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		horario_cmbox.addItem(materia.getHorario());
+		horario_cmbox.addItem("Selecciona el horario");
+		horario_cmbox.addItem("8:00 AM - 10:00 AM");
+		horario_cmbox.addItem("10:30 AM - 12:30 PM");
+		horario_cmbox.addItem("1:00 PM - 3:00 PM");
+		horario_cmbox.addItem("3:30 PM - 5:30 PM");
+		horario_cmbox.addItem("6:00 PM - 8:00 PM");
+		horario_cmbox.setBounds(74, 270, 210, 32);
+		editar_panel.add(horario_cmbox);
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
+		JLabel aula_tag = new JLabel("Aula");
+		aula_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		aula_tag.setBounds(74, 392, 172, 19);
+		editar_panel.add(aula_tag);
 
-			}
-		});
-		regresar_btn.addActionListener(new ActionListener() {
+		JComboBox<String> aula_cmbox = new JComboBox<>();
+		aula_cmbox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		aula_cmbox.addItem(materia.getAula());
+		aula_cmbox.addItem("Selecciona el aula");
+		for (int i = 100; i <= 110; i++) {
+			aula_cmbox.addItem("Aula " + i);
+		}
+		aula_cmbox.setBounds(74, 418, 210, 32);
+		editar_panel.add(aula_cmbox);
 
+		JButton guardar_btn = new JButton("Guardar");
+		guardar_btn.setBounds(650, 500, 135, 35);
+		guardar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
+		guardar_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controlEsc.getContentPane().removeAll();
-				detalles(valor);
+				Materia materia = new Materia(nombre_txt.getText(), horario_cmbox.getSelectedItem().toString(),
+						aula_cmbox.getSelectedItem().toString());
+				if (modelo.editar(materia.getId(), materia)) {
+					JOptionPane.showMessageDialog(editar_panel, "Datos guardados con éxito");
+					controlEsc.getContentPane().removeAll();
+					materias();
+				} else {
+					JOptionPane.showMessageDialog(editar_panel, "Algo salió mal");
+				}
+
 			}
 		});
 
-		detalles_panel.add(regresar_btn);
+		editar_panel.add(guardar_btn);
 
-		JLabel alumnos_tag = new JLabel("Editar");
-		alumnos_tag.setBounds(340, 50, 210, 50);
-		alumnos_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
-		detalles_panel.add(alumnos_tag);
+		JButton cancelar_btn = new JButton("Cancelar");
+		cancelar_btn.setBounds(480, 500, 135, 35);
+		cancelar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
+		cancelar_btn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(editar_panel, "¿Seguro que desea cancelar?", "Confirmación",
+						JOptionPane.YES_NO_OPTION) == 0) {
+					System.out.println("si");
+					controlEsc.getContentPane().removeAll();
+					materias();
+				}
+			}
+		});
+		editar_panel.add(cancelar_btn);
 
-		controlEsc.add(detalles_panel);
+		controlEsc.add(editar_panel);
 		controlEsc.repaint();
 		controlEsc.revalidate();
 	}
 
 	public void detalles(int valor) {
 
+		Materia materia = modelo.obtenerMateria(valor);
+
 		JPanel detalles_panel = new JPanel() {
 			@Override
 			public void paintComponent(Graphics create) {
@@ -364,7 +454,9 @@ public class MateriasView {
 				g2d.setColor(Color.decode("#E7CD70"));
 				g2d.fillRoundRect(30, 15, 830, 535, 30, 30);
 				try {
-					BufferedImage image = ImageIO.read(getClass().getResource("/media/boton-de-retroceso.png"));
+					BufferedImage image = ImageIO.read(getClass().getResource("/media/papeleria.png"));
+					g2d.drawImage(image, 480, 160, 300, 300, null);
+					image = ImageIO.read(getClass().getResource("/media/boton-de-retroceso.png"));
 					g2d.drawImage(image, 40, 25, 50, 50, null);
 
 				} catch (IOException e) {
@@ -420,22 +512,101 @@ public class MateriasView {
 
 		detalles_panel.add(regresar_btn);
 
-		JLabel alumnos_tag = new JLabel("Detalles");
-		alumnos_tag.setBounds(340, 50, 210, 50);
-		alumnos_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
-		detalles_panel.add(alumnos_tag);
+		JLabel agregar_tag = new JLabel("Agregar Materia");
+		agregar_tag.setBounds(282, 30, 335, 50);
+		agregar_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
+		detalles_panel.add(agregar_tag);
 
-		JButton editar_btn = new JButton("Editar");
-		editar_btn.setBounds(143, 450, 135, 50);
-		editar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
-		editar_btn.addActionListener(new ActionListener() {
+		JLabel nombre_tag = new JLabel("Nombre");
+		nombre_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nombre_tag.setBounds(74, 115, 84, 19);
+		detalles_panel.add(nombre_tag);
+
+		JTextField nombre_txt = new JTextField();
+		nombre_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		nombre_txt.setText(materia.getNombre());
+		nombre_txt.setBounds(74, 141, 210, 32);
+		detalles_panel.add(nombre_txt);
+
+		JLabel id_tag = new JLabel("ID");
+		id_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		id_tag.setBounds(326, 111, 164, 19);
+		detalles_panel.add(id_tag);
+
+		JTextField id_txt = new JTextField();
+		id_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		id_txt.setColumns(10);
+		id_txt.setBounds(326, 141, 210, 32);
+		id_txt.setText("" + materia.getId());
+		id_txt.setEnabled(false);
+		detalles_panel.add(id_txt);
+
+		JLabel horario_tag = new JLabel("Horario");
+		horario_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		horario_tag.setBounds(74, 230, 164, 19);
+		detalles_panel.add(horario_tag);
+
+		JComboBox<String> horario_cmbox = new JComboBox<>();
+		horario_cmbox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		horario_cmbox.addItem(materia.getHorario());
+		horario_cmbox.addItem("Selecciona el horario");
+		horario_cmbox.addItem("8:00 AM - 10:00 AM");
+		horario_cmbox.addItem("10:30 AM - 12:30 PM");
+		horario_cmbox.addItem("1:00 PM - 3:00 PM");
+		horario_cmbox.addItem("3:30 PM - 5:30 PM");
+		horario_cmbox.addItem("6:00 PM - 8:00 PM");
+		horario_cmbox.setBounds(74, 270, 210, 32);
+		detalles_panel.add(horario_cmbox);
+
+		JLabel aula_tag = new JLabel("Aula");
+		aula_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		aula_tag.setBounds(74, 392, 172, 19);
+		detalles_panel.add(aula_tag);
+
+		JComboBox<String> aula_cmbox = new JComboBox<>();
+		aula_cmbox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		aula_cmbox.addItem(materia.getAula());
+		aula_cmbox.addItem("Selecciona el aula");
+		for (int i = 100; i <= 110; i++) {
+			aula_cmbox.addItem("Aula " + i);
+		}
+		aula_cmbox.setBounds(74, 418, 210, 32);
+		detalles_panel.add(aula_cmbox);
+
+		JButton agregar_btn = new JButton("Editar");
+		agregar_btn.setBounds(650, 500, 135, 35);
+		agregar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
+		agregar_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controlEsc.getContentPane().removeAll();
-				editar(valor);
+				editar(materia);
 			}
 		});
-		detalles_panel.add(editar_btn);
+		detalles_panel.add(agregar_btn);
+
+		JButton eliminar_btn = new JButton("Eliminar");
+		eliminar_btn.setBounds(480, 500, 135, 35);
+		eliminar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
+		eliminar_btn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(detalles_panel, "¿Seguro que desea eliminarlo?", "Confirmación",
+						JOptionPane.YES_NO_OPTION) == 0) {
+					System.out.println("si");
+					if (modelo.eliminar(valor)) {
+						JOptionPane.showMessageDialog(detalles_panel, "Materia eliminada con éxito");
+						controlEsc.getContentPane().removeAll();
+						materias();
+					}
+				}
+			}
+		});
+		detalles_panel.add(eliminar_btn);
+
+		horario_cmbox.setEnabled(false);
+		aula_cmbox.setEnabled(false);
+		nombre_txt.setEnabled(false);
 
 		controlEsc.add(detalles_panel);
 		controlEsc.repaint();
