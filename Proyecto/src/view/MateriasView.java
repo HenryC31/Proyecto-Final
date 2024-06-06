@@ -11,21 +11,31 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
+import clases.Materia;
 import controllers.MenuController;
+import models.MateriasModel;
 
 public class MateriasView {
 
-	MenuController menu;
 	JFrame controlEsc = new JFrame();
+	MenuController menu;
 	JPanel materias_panel = new JPanel();
+	MateriasModel modelo = new MateriasModel();
 
 	public MateriasView() {
 		controlEsc.setTitle("Control Escolar - Materias");
@@ -40,6 +50,7 @@ public class MateriasView {
 	}
 
 	public void materias() {
+
 		materias_panel = new JPanel() {
 			@Override
 			public void paintComponent(Graphics create) {
@@ -109,25 +120,62 @@ public class MateriasView {
 
 		materias_panel.add(regresar_btn);
 
-		JLabel materias_tag = new JLabel("MATERIAS");
-		materias_tag.setBounds(340, 50, 210, 50);
-		materias_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
-		materias_panel.add(materias_tag);
+		JLabel docentes_tag = new JLabel("Materias");
+		docentes_tag.setBounds(320, 50, 240, 50);
+		docentes_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
+		materias_panel.add(docentes_tag);
+
+//		JPanel tabla_panel = new JPanel();
+//		tabla_panel.setBounds(143, 200, 700, 300);
+
+		String[] titulos = { "ID", "Nombre", "Horario", "Aula" };
+		List<Materia> materias = modelo.obtenerTodos();
+		DefaultTableModel model = new DefaultTableModel(titulos, 0) {
+			// Bloque para evitar que se editen las celdas
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		JTable table = new JTable(model);
+
+		// Bloque para centrar los datos en la tabla
+		DefaultTableCellRenderer centrar = new DefaultTableCellRenderer();
+		centrar.setHorizontalAlignment(SwingConstants.CENTER);
+		for (int i = 0; i < table.getColumnCount(); i++) {
+			table.getColumnModel().getColumn(i).setCellRenderer(centrar);
+		}
+
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(75, 120, 750, 350);
+		materias_panel.add(scrollPane);
+
+		for (Materia materia : materias) {
+			Object[] row = { materia.getId(), materia.getNombre(), materia.getHorario(), materia.getAula() };
+			model.addRow(row);
+		}
 
 		JButton detalles_btn = new JButton("Detalles");
-		detalles_btn.setBounds(143, 450, 135, 50);
+		detalles_btn.setBounds(143, 500, 135, 35);
 		detalles_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
 		detalles_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controlEsc.getContentPane().removeAll();
-				detalles();
+				if (table.getSelectedRow() != -1) {
+					Object value = table.getValueAt(table.getSelectedRow(), 0);
+					Integer valor = (Integer) value;
+					controlEsc.getContentPane().removeAll();
+					detalles(valor);
+
+				} else {
+					JOptionPane.showMessageDialog(materias_panel, "Selecciona una fila");
+				}
 			}
 		});
 		materias_panel.add(detalles_btn);
 
 		JButton agregar_btn = new JButton("Agregar");
-		agregar_btn.setBounds(500, 450, 135, 50);
+		agregar_btn.setBounds(600, 500, 135, 35);
 		agregar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
 		agregar_btn.addActionListener(new ActionListener() {
 			@Override
@@ -223,7 +271,7 @@ public class MateriasView {
 		controlEsc.revalidate();
 	}
 
-	public void editar() {
+	public void editar(int valor) {
 		JPanel detalles_panel = new JPanel() {
 			@Override
 			public void paintComponent(Graphics create) {
@@ -286,7 +334,7 @@ public class MateriasView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controlEsc.getContentPane().removeAll();
-				detalles();
+				detalles(valor);
 			}
 		});
 
@@ -302,7 +350,7 @@ public class MateriasView {
 		controlEsc.revalidate();
 	}
 
-	public void detalles() {
+	public void detalles(int valor) {
 
 		JPanel detalles_panel = new JPanel() {
 			@Override
@@ -384,7 +432,7 @@ public class MateriasView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controlEsc.getContentPane().removeAll();
-				editar();
+				editar(valor);
 			}
 		});
 		detalles_panel.add(editar_btn);
