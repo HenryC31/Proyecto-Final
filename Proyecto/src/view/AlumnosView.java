@@ -721,6 +721,8 @@ public class AlumnosView {
 						JOptionPane.showMessageDialog(detalles_panel, "Alumno eliminado con éxito");
 						controlEsc.getContentPane().removeAll();
 						alumnos();
+					} else {
+						JOptionPane.showMessageDialog(detalles_panel, "Error inesperado");
 					}
 				}
 			}

@@ -124,7 +124,7 @@ public class DocentesView {
 		docentes_panel.add(regresar_btn);
 
 		JLabel docentes_tag = new JLabel("DOCENTES");
-		docentes_tag.setBounds(340, 50, 210, 50);
+		docentes_tag.setBounds(320, 50, 240, 50);
 		docentes_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
 		docentes_panel.add(docentes_tag);
 
