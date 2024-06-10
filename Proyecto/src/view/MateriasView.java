@@ -208,7 +208,7 @@ public class MateriasView {
 				g2d.fillRoundRect(30, 15, 830, 535, 30, 30);
 				try {
 					BufferedImage image = ImageIO.read(getClass().getResource("/media/papeleria.png"));
-					g2d.drawImage(image, 480, 160, 300, 300, null);
+					g2d.drawImage(image, 540, 160, 300, 300, null);
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -278,7 +278,7 @@ public class MateriasView {
 					JOptionPane.showMessageDialog(agregar_panel, "Debes llenar bien los campos");
 				} else {
 					if (modelo.insertarMateria(materia)) {
-						JOptionPane.showMessageDialog(agregar_panel, "Docente agregado");
+						JOptionPane.showMessageDialog(agregar_panel, "Materia agregada");
 						controlEsc.getContentPane().removeAll();
 						materias();
 					} else {
@@ -325,7 +325,7 @@ public class MateriasView {
 				g2d.fillRoundRect(30, 15, 830, 535, 30, 30);
 				try {
 					BufferedImage image = ImageIO.read(getClass().getResource("/media/papeleria.png"));
-					g2d.drawImage(image, 480, 160, 300, 300, null);
+					g2d.drawImage(image, 540, 160, 300, 300, null);
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -455,7 +455,7 @@ public class MateriasView {
 				g2d.fillRoundRect(30, 15, 830, 535, 30, 30);
 				try {
 					BufferedImage image = ImageIO.read(getClass().getResource("/media/papeleria.png"));
-					g2d.drawImage(image, 480, 160, 300, 300, null);
+					g2d.drawImage(image, 540, 160, 300, 300, null);
 					image = ImageIO.read(getClass().getResource("/media/boton-de-retroceso.png"));
 					g2d.drawImage(image, 40, 25, 50, 50, null);
 

@@ -441,7 +441,7 @@ public class AlumnosView {
 		no_control_txt.setColumns(10);
 		no_control_txt.setBounds(74, 349, 210, 32);
 		no_control_txt.setText("" + alumno.getNo_control());
-		no_control_txt.setEditable(false);
+		no_control_txt.setEnabled(false);
 		no_control_txt.setEnabled(false);
 		editar_panel.add(no_control_txt);
 
@@ -685,15 +685,15 @@ public class AlumnosView {
 		telefono_txt.setText(alumno.getTelefono());
 		detalles_panel.add(telefono_txt);
 
-		ap_paterno_txt.setEditable(false);
-		ap_materno_txt.setEditable(false);
-		nombre_txt.setEditable(false);
-		fecha_nac_txt.setEditable(false);
-		curp_txt.setEditable(false);
-		no_control_txt.setEditable(false);
+		ap_paterno_txt.setEnabled(false);
+		ap_materno_txt.setEnabled(false);
+		nombre_txt.setEnabled(false);
+		fecha_nac_txt.setEnabled(false);
+		curp_txt.setEnabled(false);
 		no_control_txt.setEnabled(false);
-		correo_txt.setEditable(false);
-		telefono_txt.setEditable(false);
+		no_control_txt.setEnabled(false);
+		correo_txt.setEnabled(false);
+		telefono_txt.setEnabled(false);
 
 		JButton editar_btn = new JButton("Editar");
 		editar_btn.setBounds(650, 500, 135, 35);

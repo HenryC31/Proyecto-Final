@@ -725,14 +725,14 @@ public class DocentesView {
 		telefono_txt.setText(docente.getTelefono());
 		detalles_panel.add(telefono_txt);
 
-		ap_paterno_txt.setEditable(false);
-		ap_materno_txt.setEditable(false);
-		nombre_txt.setEditable(false);
-		fecha_nac_txt.setEditable(false);
-		rfc_txt.setEditable(false);
-		id_txt.setEditable(false);
-		correo_txt.setEditable(false);
-		telefono_txt.setEditable(false);
+		ap_paterno_txt.setEnabled(false);
+		ap_materno_txt.setEnabled(false);
+		nombre_txt.setEnabled(false);
+		fecha_nac_txt.setEnabled(false);
+		rfc_txt.setEnabled(false);
+		id_txt.setEnabled(false);
+		correo_txt.setEnabled(false);
+		telefono_txt.setEnabled(false);
 
 		JButton editar_btn = new JButton("Editar");
 		editar_btn.setBounds(650, 500, 135, 35);

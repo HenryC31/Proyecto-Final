@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import clases.Docente;
 import clases.Grupo;
 
 public class GruposModel {
@@ -31,7 +30,7 @@ public class GruposModel {
 
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(
-					"SELECT id, nombre, profesor, materia_uno, materia_dos,materia_tres\r\n" + "FROM grupos");
+					"SELECT id, nombre, profesor, materia_uno, materia_dos, materia_tres\r\n" + "FROM grupos");
 
 			while (rs.next()) {
 				int id = rs.getInt("id");
@@ -152,8 +151,8 @@ public class GruposModel {
 		return eliminado;
 	}
 
-	public boolean editar(int id, Docente docent) {
-		Docente docente = docent;
+	public boolean editar(int id, Grupo grup) {
+		Grupo grupo = grup;
 		boolean editado = false;
 		Connection con = null;
 		Statement stmt = null;
@@ -161,10 +160,9 @@ public class GruposModel {
 		try {
 			con = DriverManager.getConnection(url, usuario, contra);
 			stmt = con.createStatement();
-			rs = stmt.execute("update Docentes set nombre = '" + docente.getNombre() + "',ap_paterno = '"
-					+ docente.getAp_paterno() + "',ap_materno = '" + docente.getAp_materno() + "',fecha_nac = '"
-					+ docente.getFecha_n() + "',correo = '" + docente.getCorreo() + "',telefono = '"
-					+ docente.getTelefono() + "' where id = " + id + ";");
+			rs = stmt.execute("update grupos set nombre = '" + grupo.getNombre() + "',materia_uno = '"
+					+ grupo.getMateria_uno() + "',materia_dos = '" + grupo.getMateria_dos() + "',materia_tres = '"
+					+ grupo.getMateria_tres() + "' where id = " + id + ";");
 			editado = true;
 			con.close();
 		} catch (SQLException e) {
@@ -181,4 +179,5 @@ public class GruposModel {
 		}
 		return editado;
 	}
+
 }

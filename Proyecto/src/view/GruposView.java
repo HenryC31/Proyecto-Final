@@ -11,20 +11,39 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
+import clases.Docente;
+import clases.Grupo;
+import clases.Materia;
 import controllers.MenuController;
+import models.DocentesModel;
+import models.GruposModel;
+import models.MateriasModel;
 
 public class GruposView {
 	MenuController menu;
 	JFrame controlEsc = new JFrame();
 	JPanel grupos_panel = new JPanel();
+	GruposModel modelo = new GruposModel();
+	MateriasModel materiasModel = new MateriasModel();
+	DocentesModel docentesModel = new DocentesModel();
 
 	public GruposView() {
 		controlEsc.setTitle("Control Escolar - Grupos");
@@ -108,25 +127,65 @@ public class GruposView {
 
 		grupos_panel.add(regresar_btn);
 
-		JLabel grupos_tag = new JLabel("GRUPOS");
-		grupos_tag.setBounds(340, 50, 210, 50);
-		grupos_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
-		grupos_panel.add(grupos_tag);
+		JLabel materias_tag = new JLabel("Materias");
+		materias_tag.setBounds(350, 50, 240, 50);
+		materias_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
+		grupos_panel.add(materias_tag);
+
+//		JPanel tabla_panel = new JPanel();
+//		tabla_panel.setBounds(143, 200, 700, 300);
+
+		String[] titulos = { "ID", "Nombre", "Profesor", "Materia 1", "Materia 2", "Materia 3" };
+		List<Grupo> grupos = modelo.obtenerTodos();
+		DefaultTableModel model = new DefaultTableModel(titulos, 0) {
+			// Bloque para evitar que se editen las celdas
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		JTable table = new JTable(model);
+
+		// Bloque para centrar los datos en la tabla
+		DefaultTableCellRenderer centrar = new DefaultTableCellRenderer();
+		centrar.setHorizontalAlignment(SwingConstants.CENTER);
+		for (int i = 0; i < table.getColumnCount(); i++) {
+			table.getColumnModel().getColumn(i).setCellRenderer(centrar);
+		}
+
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(75, 120, 750, 350);
+		grupos_panel.add(scrollPane);
+
+		for (Grupo grupo : grupos) {
+//			System.out.println(grupo.getId() + "  " + grupo.getNombre() + "  "
+//					+ modelo.obtenerNombreMateria(grupo.getMateria_uno()));
+			Object[] row = { grupo.getId(), grupo.getNombre(), grupo.getProfesor(), grupo.getMateria_uno(),
+					grupo.getMateria_dos(), grupo.getMateria_tres() };
+			model.addRow(row);
+		}
 
 		JButton detalles_btn = new JButton("Detalles");
-		detalles_btn.setBounds(143, 450, 135, 50);
+		detalles_btn.setBounds(143, 500, 135, 35);
 		detalles_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
 		detalles_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controlEsc.getContentPane().removeAll();
-				detalles();
+				if (table.getSelectedRow() != -1) {
+					Object value = table.getValueAt(table.getSelectedRow(), 0);
+					Integer valor = (Integer) value;
+					controlEsc.getContentPane().removeAll();
+					detalles(valor);
+
+				} else {
+					JOptionPane.showMessageDialog(grupos_panel, "Selecciona una fila");
+				}
 			}
 		});
 		grupos_panel.add(detalles_btn);
 
 		JButton agregar_btn = new JButton("Agregar");
-		agregar_btn.setBounds(500, 450, 135, 50);
+		agregar_btn.setBounds(600, 500, 135, 35);
 		agregar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
 		agregar_btn.addActionListener(new ActionListener() {
 			@Override
@@ -140,11 +199,22 @@ public class GruposView {
 		controlEsc.add(grupos_panel);
 		controlEsc.repaint();
 		controlEsc.revalidate();
-
 	}
 
 	public void agregar() {
-		JPanel detalles_panel = new JPanel() {
+		List<String> prof = new ArrayList<>();
+		List<Docente> docentes = docentesModel.obtenerTodos();
+		for (Docente docente : docentes) {
+			prof.add(docente.getNombre() + " " + docente.getAp_paterno() + " " + docente.getAp_materno());
+		}
+
+		List<String> mat = new ArrayList<>();
+		List<Materia> materias = materiasModel.obtenerTodos();
+		for (Materia materia : materias) {
+			mat.add(materia.getNombre());
+		}
+
+		JPanel agregar_panel = new JPanel() {
 			@Override
 			public void paintComponent(Graphics create) {
 				super.paintComponent(create);
@@ -155,69 +225,139 @@ public class GruposView {
 
 				g2d.setColor(Color.decode("#E7CD70"));
 				g2d.fillRoundRect(30, 15, 830, 535, 30, 30);
-				try {
-					BufferedImage image = ImageIO.read(getClass().getResource("/media/boton-de-retroceso.png"));
-					g2d.drawImage(image, 40, 25, 50, 50, null);
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 
 			}
 		};
-		detalles_panel.setLayout(null);
+		agregar_panel.setLayout(null);
 
-		JButton regresar_btn = new JButton();
-		regresar_btn.setBounds(40, 25, 50, 50);
-		regresar_btn.setBorderPainted(false);
-		regresar_btn.setContentAreaFilled(false);
-		regresar_btn.addMouseListener(new MouseListener() {
+		JLabel grupos_tag = new JLabel("Agregar Grupo");
+		grupos_tag.setBounds(282, 30, 335, 50);
+		grupos_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
+		agregar_panel.add(grupos_tag);
 
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
+		JLabel id_tag = new JLabel("Id");
+		id_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		id_tag.setBounds(74, 115, 84, 19);
+		agregar_panel.add(id_tag);
 
-			}
+		JTextField id_txt = new JTextField();
+		id_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		id_txt.setColumns(10);
+		id_txt.setBounds(74, 141, 210, 32);
+		agregar_panel.add(id_txt);
 
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
+		JLabel nombre_tag = new JLabel("Grupo");
+		nombre_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nombre_tag.setBounds(326, 111, 164, 19);
+		agregar_panel.add(nombre_tag);
 
-			}
+		JTextField nombre_txt = new JTextField();
+		nombre_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		nombre_txt.setColumns(10);
+		nombre_txt.setBounds(326, 141, 210, 32);
+		agregar_panel.add(nombre_txt);
 
-			@Override
-			public void mouseExited(MouseEvent e) {
-				controlEsc.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			}
+		JLabel profesor_tag = new JLabel("Profesor");
+		profesor_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		profesor_tag.setBounds(586, 111, 172, 19);
+		agregar_panel.add(profesor_tag);
 
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				controlEsc.setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
+		JComboBox<String> profesor_txt = new JComboBox<String>();
+		profesor_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		for (int i = 0; i < prof.size(); i++) {
+			profesor_txt.addItem(prof.get(i));
+		}
+		profesor_txt.setBounds(586, 141, 210, 32);
+		agregar_panel.add(profesor_txt);
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
+		JLabel materia_uno_tag = new JLabel("Materia 1");
+		materia_uno_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		materia_uno_tag.setBounds(74, 184, 300, 19);
+		agregar_panel.add(materia_uno_tag);
 
-			}
-		});
-		regresar_btn.addActionListener(new ActionListener() {
+		JComboBox<String> materia_uno_txt = new JComboBox<String>();
+		materia_uno_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		for (int i = 0; i < mat.size(); i++) {
+			materia_uno_txt.addItem(mat.get(i));
+		}
+		materia_uno_txt.setBounds(74, 210, 210, 32);
+		agregar_panel.add(materia_uno_txt);
 
+		JLabel materia_dos_tag = new JLabel("Materia 2");
+		materia_dos_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		materia_dos_tag.setBounds(74, 280, 172, 19);
+		agregar_panel.add(materia_dos_tag);
+
+		JComboBox<String> materia_dos_txt = new JComboBox<String>();
+		materia_dos_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		for (int i = 0; i < mat.size(); i++) {
+			materia_dos_txt.addItem(mat.get(i));
+		}
+		materia_dos_txt.setBounds(74, 305, 210, 32);
+		agregar_panel.add(materia_dos_txt);
+
+		JLabel materia_tres_tag = new JLabel("Materia 3");
+		materia_tres_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		materia_tres_tag.setBounds(74, 392, 172, 19);
+		agregar_panel.add(materia_tres_tag);
+
+		JComboBox<String> materia_tres_txt = new JComboBox<String>();
+		materia_tres_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		for (int i = 0; i < mat.size(); i++) {
+			materia_tres_txt.addItem(mat.get(i));
+		}
+		materia_tres_txt.setBounds(74, 418, 210, 32);
+		agregar_panel.add(materia_tres_txt);
+
+		id_txt.setEnabled(false);
+
+		JButton agregar_btn = new JButton("Agregar");
+		agregar_btn.setBounds(650, 500, 135, 35);
+		agregar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
+		agregar_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controlEsc.getContentPane().removeAll();
-				grupos();
+				if (materia_uno_txt.getSelectedItem().toString().equals(materia_dos_txt.getSelectedItem().toString())
+						|| materia_uno_txt.getSelectedItem().toString()
+								.equals(materia_tres_txt.getSelectedItem().toString())
+						|| materia_dos_txt.getSelectedItem().toString()
+								.equals(materia_tres_txt.getSelectedItem().toString())) {
+					JOptionPane.showMessageDialog(controlEsc, "No puedes seleccionar dos materias iguales ");
+				} else {
+					Grupo grupo = new Grupo(nombre_txt.getText(), profesor_txt.getSelectedItem().toString(),
+							materia_uno_txt.getSelectedItem().toString(), materia_dos_txt.getSelectedItem().toString(),
+							materia_tres_txt.getSelectedItem().toString());
+
+					if (modelo.insertarGrupo(grupo)) {
+						JOptionPane.showMessageDialog(agregar_panel, "Grupo agregado");
+						controlEsc.getContentPane().removeAll();
+						grupos();
+					} else {
+						JOptionPane.showMessageDialog(agregar_panel, "Ocurrió un problema, revisa los datos");
+					}
+				}
+
 			}
 		});
+		agregar_panel.add(agregar_btn);
 
-		detalles_panel.add(regresar_btn);
+		JButton cancelar_btn = new JButton("Cancelar");
+		cancelar_btn.setBounds(480, 500, 135, 35);
+		cancelar_btn.setFont(new Font("Eras ITC Mediana", Font.BOLD, 20));
+		cancelar_btn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(agregar_panel, "¿Seguro que desea cancelar?", "Confirmación",
+						JOptionPane.YES_NO_OPTION) == 0) {
+					System.out.println("si");
+					controlEsc.getContentPane().removeAll();
+					grupos();
+				}
+			}
+		});
+		agregar_panel.add(cancelar_btn);
 
-		JLabel alumnos_tag = new JLabel("Agregar");
-		alumnos_tag.setBounds(340, 50, 210, 50);
-		alumnos_tag.setFont(new Font("Eras ITC Mediana", Font.BOLD, 40));
-		detalles_panel.add(alumnos_tag);
-
-		controlEsc.add(detalles_panel);
+		controlEsc.add(agregar_panel);
 		controlEsc.repaint();
 		controlEsc.revalidate();
 	}
@@ -285,7 +425,7 @@ public class GruposView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controlEsc.getContentPane().removeAll();
-				detalles();
+				detalles(2);
 			}
 		});
 
@@ -301,7 +441,7 @@ public class GruposView {
 		controlEsc.revalidate();
 	}
 
-	public void detalles() {
+	public void detalles(int valor) {
 
 		JPanel detalles_panel = new JPanel() {
 			@Override
