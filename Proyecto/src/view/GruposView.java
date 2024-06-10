@@ -320,9 +320,10 @@ public class GruposView {
 				if (materia_uno_txt.getSelectedItem().toString().equals(materia_dos_txt.getSelectedItem().toString())
 						|| materia_uno_txt.getSelectedItem().toString()
 								.equals(materia_tres_txt.getSelectedItem().toString())
-						|| materia_dos_txt.getSelectedItem().toString()
-								.equals(materia_tres_txt.getSelectedItem().toString())) {
-					JOptionPane.showMessageDialog(controlEsc, "No puedes seleccionar dos materias iguales ");
+						|| materia_dos_txt.getSelectedItem().toString().equals(
+								materia_tres_txt.getSelectedItem().toString())
+						|| nombre_txt.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(controlEsc, "Llena los campos correctamente");
 				} else {
 					Grupo grupo = new Grupo(nombre_txt.getText(), profesor_txt.getSelectedItem().toString(),
 							materia_uno_txt.getSelectedItem().toString(), materia_dos_txt.getSelectedItem().toString(),

@@ -270,22 +270,25 @@ public class MateriasView {
 		agregar_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Materia materia = new Materia(nombre_txt.getText(), horario_cmbox.getSelectedItem().toString(),
-						aula_cmbox.getSelectedItem().toString());
-
-				if (materia.getHorario().equals("Selecciona el horario")
-						|| materia.getAula().equals("Selecciona el aula")) {
-					JOptionPane.showMessageDialog(agregar_panel, "Debes llenar bien los campos");
+				if (nombre_txt.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(controlEsc, "Llena todos los campos correctamente");
 				} else {
-					if (modelo.insertarMateria(materia)) {
-						JOptionPane.showMessageDialog(agregar_panel, "Materia agregada");
-						controlEsc.getContentPane().removeAll();
-						materias();
+					Materia materia = new Materia(nombre_txt.getText(), horario_cmbox.getSelectedItem().toString(),
+							aula_cmbox.getSelectedItem().toString());
+
+					if (materia.getHorario().equals("Selecciona el horario")
+							|| materia.getAula().equals("Selecciona el aula")) {
+						JOptionPane.showMessageDialog(agregar_panel, "Debes llenar bien los campos");
 					} else {
-						JOptionPane.showMessageDialog(agregar_panel, "Ocurrió un problema, revisa los datos");
+						if (modelo.insertarMateria(materia)) {
+							JOptionPane.showMessageDialog(agregar_panel, "Materia agregada");
+							controlEsc.getContentPane().removeAll();
+							materias();
+						} else {
+							JOptionPane.showMessageDialog(agregar_panel, "Ocurrió un problema, revisa los datos");
+						}
 					}
 				}
-
 			}
 		});
 		agregar_panel.add(agregar_btn);

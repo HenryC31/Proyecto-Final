@@ -11,9 +11,10 @@ public class Alumno {
 	private Date fecha_n;
 	private String correo;
 	private String telefono;
+	private String grupo;
 
 	public Alumno(int no_control, String nombre, String ap_Paterno, String ap_Materno, String curp, Date fecha_n,
-			String correo, String telefono) {
+			String correo, String telefono, String grupo) {
 		this.no_control = no_control;
 		this.nombre = nombre;
 		this.ap_Paterno = ap_Paterno;
@@ -22,14 +23,16 @@ public class Alumno {
 		this.fecha_n = fecha_n;
 		this.correo = correo;
 		this.telefono = telefono;
+		this.grupo = grupo;
 	}
 
-	public Alumno(int no_control, String nombre, String ap_Paterno, String ap_Materno, String telefono) {
+	public Alumno(int no_control, String nombre, String ap_Paterno, String ap_Materno, String telefono, String grupo) {
 		this.no_control = no_control;
 		this.nombre = nombre;
 		this.ap_Paterno = ap_Paterno;
 		this.ap_Materno = ap_Materno;
 		this.telefono = telefono;
+		this.grupo = grupo;
 	}
 
 	public int getNo_control() {
@@ -94,5 +97,13 @@ public class Alumno {
 
 	public void setCorreo(String correo) {
 		this.correo = correo;
+	}
+
+	public String getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(String grupo) {
+		this.grupo = grupo;
 	}
 }

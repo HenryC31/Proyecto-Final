@@ -30,7 +30,8 @@ public class AlumnosModel {
 			con = DriverManager.getConnection(url, usuario, contra);
 
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT no_control, nombre, apellido_M, apellido_P, telefono\r\n" + "FROM Alumnos");
+			rs = stmt.executeQuery(
+					"SELECT no_control, nombre, apellido_M, apellido_P, telefono, grupo\r\n" + "FROM Alumnos");
 
 			while (rs.next()) {
 				int noControl = rs.getInt("no_control");
@@ -38,8 +39,9 @@ public class AlumnosModel {
 				String apellidoM = rs.getString("apellido_M");
 				String apellidoP = rs.getString("apellido_P");
 				String telefono = rs.getString("telefono");
+				String grupo = rs.getString("grupo");
 
-				Alumno alumno = new Alumno(noControl, nombre, apellidoP, apellidoM, telefono);
+				Alumno alumno = new Alumno(noControl, nombre, apellidoP, apellidoM, telefono, grupo);
 				alumnos.add(alumno);
 			}
 			con.close();
@@ -67,7 +69,7 @@ public class AlumnosModel {
 
 		try {
 			connection = DriverManager.getConnection(url, usuario, contra);
-			String query = "INSERT INTO Alumnos (no_control, nombre, apellido_M, apellido_P, curp, fecha_n, correo, telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			String query = "INSERT INTO Alumnos (no_control, nombre, apellido_M, apellido_P, curp, fecha_n, correo, telefono, grupo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			statement = connection.prepareStatement(query);
 			statement.setInt(1, alumno.getNo_control());
 			statement.setString(2, alumno.getNombre());
@@ -77,6 +79,7 @@ public class AlumnosModel {
 			statement.setDate(6, alumno.getFecha_n());
 			statement.setString(7, alumno.getCorreo());
 			statement.setString(8, alumno.getTelefono());
+			statement.setString(9, alumno.getGrupo());
 
 			int rows = statement.executeUpdate();
 			inserted = rows > 0;
@@ -107,7 +110,7 @@ public class AlumnosModel {
 
 			while (rs.next()) {
 				alumno = new Alumno(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(3), rs.getString(5),
-						rs.getDate(6), rs.getString(7), rs.getString(8));
+						rs.getDate(6), rs.getString(7), rs.getString(8), rs.getString(9));
 			}
 			con.close();
 		} catch (SQLException e) {
@@ -165,7 +168,8 @@ public class AlumnosModel {
 			rs = stmt.execute("update Alumnos set nombre = '" + alumno.getNombre() + "',apellido_M = '"
 					+ alumno.getAp_Materno() + "',apellido_P = '" + alumno.getAp_Paterno() + "',curp = '"
 					+ alumno.getCurp() + "',fecha_n = '" + alumno.getFecha_n() + "',correo = '" + alumno.getCorreo()
-					+ "',telefono = '" + alumno.getTelefono() + "' where no_control = " + no_control + ";");
+					+ "',telefono = '" + alumno.getTelefono() + "',grupo = '" + alumno.getGrupo()
+					+ "' where no_control = " + no_control + ";");
 			editado = true;
 			con.close();
 		} catch (SQLException e) {

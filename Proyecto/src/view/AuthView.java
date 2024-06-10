@@ -144,14 +144,18 @@ public class AuthView {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String pass = new String(contra_psw.getPassword());
-				System.out.println(pass);
-				if (modelo.login(usuario_txt.getText(), pass)) {
-					controlEsc.dispose();
-					controlador = new MenuController();
-					controlador.menu();
+				if (usuario_txt.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(controlEsc, "Llena los datos correctamente");
 				} else {
-					JOptionPane.showMessageDialog(controlEsc, "Verifica los datos papito");
+					String pass = new String(contra_psw.getPassword());
+					System.out.println(pass);
+					if (modelo.login(usuario_txt.getText(), pass)) {
+						controlEsc.dispose();
+						controlador = new MenuController();
+						controlador.menu();
+					} else {
+						JOptionPane.showMessageDialog(controlEsc, "Verifica los datos papito");
+					}
 				}
 			}
 		});

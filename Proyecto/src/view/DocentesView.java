@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -131,7 +133,7 @@ public class DocentesView {
 //		JPanel tabla_panel = new JPanel();
 //		tabla_panel.setBounds(143, 200, 700, 300);
 
-		String[] titulos = { "ID", "RFC", "Nombre", "Ap. Paterno", "Ap. Materno", "Teléfono", "Grupo", "Información" };
+		String[] titulos = { "ID", "RFC", "Nombre", "Ap. Paterno", "Ap. Materno", "Teléfono", "Información" };
 		List<Docente> docentes = modelo.obtenerTodos();
 		DefaultTableModel model = new DefaultTableModel(titulos, 0) {
 			// Bloque para evitar que se editen las celdas
@@ -155,7 +157,7 @@ public class DocentesView {
 
 		for (Docente docente : docentes) {
 			Object[] row = { docente.getId(), docente.getRfc(), docente.getNombre(), docente.getAp_paterno(),
-					docente.getAp_materno(), docente.getTelefono(), "", "" };
+					docente.getAp_materno(), docente.getTelefono(), "" };
 			model.addRow(row);
 		}
 
@@ -260,6 +262,15 @@ public class DocentesView {
 		fecha_nac_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		fecha_nac_txt.setColumns(10);
 		fecha_nac_txt.setBounds(74, 210, 210, 32);
+		fecha_nac_txt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!Character.isDigit(c) && c != '/') {
+					e.consume();
+				}
+			}
+		});
 		agregar_panel.add(fecha_nac_txt);
 
 		JLabel rfc_tag = new JLabel("RFC");
@@ -293,7 +304,28 @@ public class DocentesView {
 		telefono_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		telefono_txt.setColumns(10);
 		telefono_txt.setBounds(74, 487, 210, 32);
+		telefono_txt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!Character.isDigit(c)) {
+					e.consume(); // Ignora la entrada si no es un dígito
+				}
+			}
+		});
 		agregar_panel.add(telefono_txt);
+
+		JLabel id_tag = new JLabel("ID");
+		id_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		id_tag.setBounds(74, 323, 172, 19);
+		agregar_panel.add(id_tag);
+
+		JTextField id_txt = new JTextField();
+		id_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		id_txt.setColumns(10);
+		id_txt.setBounds(74, 349, 210, 32);
+		id_txt.setEnabled(false);
+		agregar_panel.add(id_txt);
 
 		JButton agregar_btn = new JButton("Agregar");
 		agregar_btn.setBounds(650, 500, 135, 35);
@@ -301,16 +333,23 @@ public class DocentesView {
 		agregar_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Docente docente = new Docente(rfc_txt.getText(), nombre_txt.getText(), ap_paterno_txt.getText(),
-						ap_materno_txt.getText(), Date.valueOf(fecha_nac_txt.getText()), correo_txt.getText(),
-						telefono_txt.getText());
-
-				if (modelo.insertarDocente(docente)) {
-					JOptionPane.showMessageDialog(agregar_panel, "Docente agregado");
-					controlEsc.getContentPane().removeAll();
-					docentes();
+				if (telefono_txt.getText().isEmpty() || ap_materno_txt.getText().isEmpty()
+						|| ap_paterno_txt.getText().isEmpty() || correo_txt.getText().isEmpty()
+						|| rfc_txt.getText().isEmpty() || fecha_nac_txt.getText().isEmpty()
+						|| fecha_nac_txt.getText().isEmpty() || nombre_txt.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(controlEsc, "Llena todos los campos");
 				} else {
-					JOptionPane.showMessageDialog(agregar_panel, "Ocurrió un problema, revisa los datos");
+					Docente docente = new Docente(rfc_txt.getText(), nombre_txt.getText(), ap_paterno_txt.getText(),
+							ap_materno_txt.getText(), Date.valueOf(fecha_nac_txt.getText()), correo_txt.getText(),
+							telefono_txt.getText());
+
+					if (modelo.insertarDocente(docente)) {
+						JOptionPane.showMessageDialog(agregar_panel, "Docente agregado");
+						controlEsc.getContentPane().removeAll();
+						docentes();
+					} else {
+						JOptionPane.showMessageDialog(agregar_panel, "Ocurrió un problema, revisa los datos");
+					}
 				}
 			}
 		});
@@ -457,6 +496,15 @@ public class DocentesView {
 		fecha_nac_txt.setColumns(10);
 		fecha_nac_txt.setBounds(74, 210, 210, 32);
 		fecha_nac_txt.setText(docente.getFecha_n().toString());
+		fecha_nac_txt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!Character.isDigit(c) && c != '/') {
+					e.consume();
+				}
+			}
+		});
 		editar_panel.add(fecha_nac_txt);
 
 		JLabel rfc_tag = new JLabel("RFC");
@@ -505,6 +553,15 @@ public class DocentesView {
 		telefono_txt.setColumns(10);
 		telefono_txt.setBounds(74, 487, 210, 32);
 		telefono_txt.setText(docente.getTelefono());
+		telefono_txt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!Character.isDigit(c)) {
+					e.consume(); // Ignora la entrada si no es un dígito
+				}
+			}
+		});
 		editar_panel.add(telefono_txt);
 
 		id_txt.setEnabled(false);

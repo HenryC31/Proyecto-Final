@@ -7,16 +7,20 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,14 +33,17 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import clases.Alumno;
+import clases.Grupo;
 import controllers.MenuController;
 import models.AlumnosModel;
+import models.GruposModel;
 
 public class AlumnosView {
 	MenuController menu;
 	JFrame controlEsc = new JFrame();
 	JPanel alumnos_panel = new JPanel();
 	AlumnosModel modelo = new AlumnosModel();
+	GruposModel gruposModel = new GruposModel();
 
 	public AlumnosView() {
 		controlEsc.setTitle("Control Escolar - Alumnos");
@@ -154,7 +161,7 @@ public class AlumnosView {
 
 		for (Alumno alumno : alumnos) {
 			Object[] row = { alumno.getNo_control(), alumno.getNombre(), alumno.getAp_Paterno(), alumno.getAp_Materno(),
-					alumno.getTelefono(), "", "" };
+					alumno.getTelefono(), alumno.getGrupo(), "" };
 			model.addRow(row);
 		}
 
@@ -196,6 +203,12 @@ public class AlumnosView {
 	}
 
 	public void agregar() {
+		List<String> grup = new ArrayList<String>();
+		List<Grupo> grupos = gruposModel.obtenerTodos();
+		for (Grupo grupo : grupos) {
+			grup.add(grupo.getNombre());
+		}
+
 		JPanel agregar_panel = new JPanel() {
 			@Override
 			public void paintComponent(Graphics create) {
@@ -259,6 +272,15 @@ public class AlumnosView {
 		fecha_nac_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		fecha_nac_txt.setColumns(10);
 		fecha_nac_txt.setBounds(74, 210, 210, 32);
+		fecha_nac_txt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!Character.isDigit(c) && c != '/') {
+					e.consume();
+				}
+			}
+		});
 		agregar_panel.add(fecha_nac_txt);
 
 		JLabel curp_tag = new JLabel("CURP");
@@ -303,7 +325,29 @@ public class AlumnosView {
 		telefono_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		telefono_txt.setColumns(10);
 		telefono_txt.setBounds(74, 487, 210, 32);
+		telefono_txt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!Character.isDigit(c)) {
+					e.consume(); // Ignora la entrada si no es un dígito
+				}
+			}
+		});
 		agregar_panel.add(telefono_txt);
+
+		JLabel grupo_tag = new JLabel("Grupo");
+		grupo_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		grupo_tag.setBounds(586, 184, 164, 19);
+		agregar_panel.add(grupo_tag);
+
+		JComboBox<String> grupo_txt = new JComboBox<String>();
+		grupo_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		for (int i = 0; i < grup.size(); i++) {
+			grupo_txt.addItem(grup.get(i));
+		}
+		grupo_txt.setBounds(586, 210, 210, 32);
+		agregar_panel.add(grupo_txt);
 
 		JButton agregar_btn = new JButton("Agregar");
 		agregar_btn.setBounds(650, 500, 135, 35);
@@ -311,16 +355,25 @@ public class AlumnosView {
 		agregar_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Alumno alumno = new Alumno(Integer.parseInt(no_control_txt.getText()), nombre_txt.getText(),
-						ap_paterno_txt.getText(), ap_materno_txt.getText(), curp_txt.getText(),
-						Date.valueOf(fecha_nac_txt.getText()), correo_txt.getText(), telefono_txt.getText());
-
-				if (modelo.insertarAlumno(alumno)) {
-					JOptionPane.showMessageDialog(agregar_panel, "Alumno agregado");
-					controlEsc.getContentPane().removeAll();
-					alumnos();
+				if (telefono_txt.getText().isEmpty() || ap_materno_txt.getText().isEmpty()
+						|| ap_paterno_txt.getText().isEmpty() || correo_txt.getText().isEmpty()
+						|| curp_txt.getText().isEmpty() || fecha_nac_txt.getText().isEmpty()
+						|| fecha_nac_txt.getText().isEmpty() || no_control_txt.getText().isEmpty()
+						|| nombre_txt.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(controlEsc, "Llena todos los campos");
 				} else {
-					JOptionPane.showMessageDialog(agregar_panel, "Ocurrió un problema, revisa los datos");
+					Alumno alumno = new Alumno(Integer.parseInt(no_control_txt.getText()), nombre_txt.getText(),
+							ap_paterno_txt.getText(), ap_materno_txt.getText(), curp_txt.getText(),
+							Date.valueOf(fecha_nac_txt.getText()), correo_txt.getText(), telefono_txt.getText(),
+							grupo_txt.getSelectedItem().toString());
+
+					if (modelo.insertarAlumno(alumno)) {
+						JOptionPane.showMessageDialog(agregar_panel, "Alumno agregado");
+						controlEsc.getContentPane().removeAll();
+						alumnos();
+					} else {
+						JOptionPane.showMessageDialog(agregar_panel, "Ocurrió un problema, revisa los datos");
+					}
 				}
 			}
 		});
@@ -417,6 +470,15 @@ public class AlumnosView {
 		fecha_nac_txt.setColumns(10);
 		fecha_nac_txt.setBounds(74, 210, 210, 32);
 		fecha_nac_txt.setText(alumno.getFecha_n().toString());
+		fecha_nac_txt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!Character.isDigit(c) && c != '/') {
+					e.consume();
+				}
+			}
+		});
 		editar_panel.add(fecha_nac_txt);
 
 		JLabel curp_tag = new JLabel("CURP");
@@ -467,7 +529,35 @@ public class AlumnosView {
 		telefono_txt.setColumns(10);
 		telefono_txt.setBounds(74, 487, 210, 32);
 		telefono_txt.setText(alumno.getTelefono());
+		telefono_txt.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!Character.isDigit(c)) {
+					e.consume(); // Ignora la entrada si no es un dígito
+				}
+			}
+		});
 		editar_panel.add(telefono_txt);
+
+		JLabel grupo_tag = new JLabel("Grupo");
+		grupo_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		grupo_tag.setBounds(586, 184, 164, 19);
+		editar_panel.add(grupo_tag);
+
+		List<String> grup = new ArrayList<String>();
+		grup.add(alumno.getGrupo());
+		List<Grupo> grupos = gruposModel.obtenerTodos();
+		for (Grupo grupo : grupos) {
+			grup.add(grupo.getNombre());
+		}
+		JComboBox<String> grupo_txt = new JComboBox<String>();
+		grupo_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		for (int i = 0; i < grup.size(); i++) {
+			grupo_txt.addItem(grup.get(i));
+		}
+		grupo_txt.setBounds(586, 210, 210, 32);
+		editar_panel.add(grupo_txt);
 
 		JButton guardar_btn = new JButton("Guardar");
 		guardar_btn.setBounds(650, 500, 135, 35);
@@ -475,15 +565,24 @@ public class AlumnosView {
 		guardar_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Alumno alumno = new Alumno(Integer.parseInt(no_control_txt.getText()), nombre_txt.getText(),
-						ap_paterno_txt.getText(), ap_materno_txt.getText(), curp_txt.getText(),
-						Date.valueOf(fecha_nac_txt.getText()), correo_txt.getText(), telefono_txt.getText());
-				if (modelo.editar(alumno.getNo_control(), alumno)) {
-					JOptionPane.showMessageDialog(editar_panel, "Datos guardados con éxito");
-					controlEsc.getContentPane().removeAll();
-					alumnos();
+				if (telefono_txt.getText().isEmpty() || ap_materno_txt.getText().isEmpty()
+						|| ap_paterno_txt.getText().isEmpty() || correo_txt.getText().isEmpty()
+						|| curp_txt.getText().isEmpty() || fecha_nac_txt.getText().isEmpty()
+						|| fecha_nac_txt.getText().isEmpty() || no_control_txt.getText().isEmpty()
+						|| nombre_txt.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(controlEsc, "Llena todos los campos");
 				} else {
-					JOptionPane.showMessageDialog(editar_panel, "Algo salió mal");
+					Alumno alumno = new Alumno(Integer.parseInt(no_control_txt.getText()), nombre_txt.getText(),
+							ap_paterno_txt.getText(), ap_materno_txt.getText(), curp_txt.getText(),
+							Date.valueOf(fecha_nac_txt.getText()), correo_txt.getText(), telefono_txt.getText(),
+							grupo_txt.getSelectedItem().toString());
+					if (modelo.editar(alumno.getNo_control(), alumno)) {
+						JOptionPane.showMessageDialog(editar_panel, "Datos guardados con éxito");
+						controlEsc.getContentPane().removeAll();
+						alumnos();
+					} else {
+						JOptionPane.showMessageDialog(editar_panel, "Algo salió mal");
+					}
 				}
 
 			}
@@ -685,6 +784,21 @@ public class AlumnosView {
 		telefono_txt.setText(alumno.getTelefono());
 		detalles_panel.add(telefono_txt);
 
+		JLabel grupo_tag = new JLabel("Grupo");
+		grupo_tag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		grupo_tag.setBounds(586, 184, 164, 19);
+		detalles_panel.add(grupo_tag);
+
+		List<String> grup = new ArrayList<String>();
+		grup.add(alumno.getGrupo());
+		JComboBox<String> grupo_txt = new JComboBox<String>();
+		grupo_txt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		for (int i = 0; i < grup.size(); i++) {
+			grupo_txt.addItem(grup.get(i));
+		}
+		grupo_txt.setBounds(586, 210, 210, 32);
+		detalles_panel.add(grupo_txt);
+
 		ap_paterno_txt.setEnabled(false);
 		ap_materno_txt.setEnabled(false);
 		nombre_txt.setEnabled(false);
@@ -694,6 +808,7 @@ public class AlumnosView {
 		no_control_txt.setEnabled(false);
 		correo_txt.setEnabled(false);
 		telefono_txt.setEnabled(false);
+		grupo_txt.setEnabled(false);
 
 		JButton editar_btn = new JButton("Editar");
 		editar_btn.setBounds(650, 500, 135, 35);
